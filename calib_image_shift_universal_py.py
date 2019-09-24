@@ -10,8 +10,6 @@ from skimage.measure import label, regionprops
 from skimage.morphology import closing, square
 from skimage.color import label2rgb
 from skimage.filters import threshold_otsu
-from tkinter import Tk
-from tkinter.filedialog import askopenfilenames
 from skimage.viewer import ImageViewer
 import matplotlib.patches as mpatches
 from  skimage.transform import rotate

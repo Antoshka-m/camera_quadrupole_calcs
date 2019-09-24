@@ -1,3 +1,6 @@
+from tkinter import Tk
+from tkinter.filedialog import askopenfilenames
+
 def get_filenames():
     """
     get filenames with graphical interface
