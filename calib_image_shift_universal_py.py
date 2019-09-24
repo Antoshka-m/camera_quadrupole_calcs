@@ -17,20 +17,7 @@ import matplotlib.patches as mpatches
 from  skimage.transform import rotate
 from skimage.transform import AffineTransform, warp
 from scipy.stats import linregress
-
-
-def get_filenames():
-    """
-    get filenames with graphical interface
-        
-    Returns
-    -------
-    file_list : list
-        list of chosen filenames
-    """
-    Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
-    file_list=askopenfilenames()
-    return file_list
+from get_filenames import get_filenames
 
 
 def rotate_image(frame, angle=0):
@@ -301,7 +288,7 @@ while finish==False:
         angle, finish=rotate_image(frame, angle)
 frame=rotate(frame, angle)
 
-# *Detect center of lightspot, show quadrants:*
+# Detect center of lightspot, show quadrants:
 
 centroid=threshold_centroid(frame)
 plot_im_w_quadrants(frame, centroid)
