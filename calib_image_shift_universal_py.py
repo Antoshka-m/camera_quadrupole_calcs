@@ -1,15 +1,8 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 from skvideo.utils import rgb2gray
 import skvideo.io
 from skimage import io
-# from skimage import measure
 from skimage.color import rgb2gray
 from skimage.filters import threshold_mean  # simple mean thresholding
 from skimage.segmentation import clear_border
@@ -26,9 +19,6 @@ from skimage.transform import AffineTransform, warp
 from scipy.stats import linregress
 
 
-# In[3]:
-
-
 def get_filenames():
     """
     get filenames with graphical interface
@@ -41,9 +31,6 @@ def get_filenames():
     Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
     file_list=askopenfilenames()
     return file_list
-
-
-# In[4]:
 
 
 def rotate_image(frame, angle=0):
@@ -78,9 +65,6 @@ def rotate_image(frame, angle=0):
         finish=False
         print("finished rotating to angle ", angle, "degrees.")
     return angle, finish
-
-
-# In[5]:
 
 
 def threshold_centroid (image):
@@ -118,9 +102,6 @@ def threshold_centroid (image):
         centers.append(center)
     i=areas.index(max(areas))
     return centers[i]
-
-
-# In[6]:
 
 
 def calc_intensities(image, center_coord, Iz, Il, Isum):
@@ -162,9 +143,6 @@ def calc_intensities(image, center_coord, Iz, Il, Isum):
     return Iz, Il, Isum
 
 
-# In[7]:
-
-
 def plot_im_w_quadrants(frame, centroid):
     """
     Plot single image and showing the quadrants
@@ -182,9 +160,6 @@ def plot_im_w_quadrants(frame, centroid):
     plt.axvline(x=centroid[1], c="red", linewidth=1)
     plt.axhline(y=centroid[0], c="red", linewidth=1)
     plt.show()
-
-
-# In[35]:
 
 
 def plot_shift_curves(k_px_um, Il, Iz, Isum, x_shift, normalization=False, shift_vs_sig=True):
@@ -264,9 +239,6 @@ def plot_shift_curves(k_px_um, Il, Iz, Isum, x_shift, normalization=False, shift
     plt.show()
 
 
-# In[43]:
-
-
 def calc_calib_line(x_shift, k_px_um, Il, Isum=None, normalization=False, shift_vs_sig=True):
     """
     Calculate coefficient of calibration line shift to signal of signal to shift.
@@ -310,11 +282,7 @@ def calc_calib_line(x_shift, k_px_um, Il, Isum=None, normalization=False, shift_
         print('The calibration line (a.u. to um) has formula {}*x{}'.format(round(k, 3), round(b, 3)))
     return k, b
 
-
 # Let's import first frame of videofile, and show it
-
-# In[10]:
-
 
 file = get_filenames()
 file = file[0] # get just single file instead of list
@@ -325,11 +293,7 @@ plt.figure()
 plt.imshow(frame, cmap=plt.cm.gray)
 plt.show()
 
-
 # Compensate angle if its needed
-
-# In[11]:
-
 
 finish=False
 angle=0
@@ -337,30 +301,18 @@ while finish==False:
         angle, finish=rotate_image(frame, angle)
 frame=rotate(frame, angle)
 
-
 # *Detect center of lightspot, show quadrants:*
-
-# In[12]:
-
 
 centroid=threshold_centroid(frame)
 plot_im_w_quadrants(frame, centroid)
 
-
 # Demonstrate how shifted image looks like
-
-# In[13]:
-
 
 transform = AffineTransform(translation=(1, 0))
 shifted = warp(frame, transform, mode='constant', preserve_range=True)
 plot_im_w_quadrants(shifted, centroid)
 
-
 # Shift images along x axis
-
-# In[38]:
-
 
 shifted_im = []
 x_shift = np.array([0.1*dx for dx in range(0, 11)])  # generate dx value for linear shift
@@ -368,11 +320,7 @@ for dx in x_shift:
     transform = AffineTransform(translation=(dx, 0))  # shift along lateral axis
     shifted_im.append(warp(frame, transform, mode='constant', preserve_range=True))
 
-
 # Calculate the intensities
-
-# In[39]:
-
 
 Il=np.array([])
 Iz=np.array([])
@@ -380,17 +328,10 @@ Isum=np.array([])
 for i in range(len(shifted_im)):
     Iz, Il, Isum = calc_intensities(shifted_im[i], centroid, Iz, Il, Isum)
 
-
 # Show calculated intensity difference vs displacement and get linear fit coefficients of the calibration:
-
-# In[40]:
-
 
 plot_shift_curves(k_px_um=1.36, Il=Il, Iz=Iz, Isum=Isum, x_shift=x_shift, normalization=False, shift_vs_sig=True)
 k, b = calc_calib_line(x_shift=x_shift, k_px_um=1.36, Il=Il, normalization=False, shift_vs_sig=True)
-
-
-# In[ ]:
 
 
 
