@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
     intensity \ shift calibration curve script
 """
 
-def plot_im_w_quadrants(frame, centroid):
+def plot_im_w_quadrants(frame, centroid, fig_title):
     """
     Plot single image and showing the quadrants
     
@@ -15,7 +15,9 @@ def plot_im_w_quadrants(frame, centroid):
     centroid: tuple
         coordinates of the center of quadrants
     """
+
     plt.figure()
+    plt.title(fig_title)
     plt.imshow(frame, cmap=plt.cm.gray)
     plt.plot(centroid[1], centroid[0], "x", c="red")
     plt.axvline(x=centroid[1], c="red", linewidth=1)

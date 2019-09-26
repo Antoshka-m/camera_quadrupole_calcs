@@ -2,7 +2,7 @@
 Functions for calculation intensity difference signal
 with 4-quadrant method. All functions applied to the single grayscale image.
 """
-import maplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 from  skimage.transform import rotate
 from skimage.filters import threshold_otsu

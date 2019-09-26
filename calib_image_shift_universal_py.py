@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from skvideo.utils import rgb2gray
+from skimage.color import rgb2gray
 import skvideo.io
 from skimage import io
 from skimage.filters import threshold_mean  # simple mean thresholding
@@ -30,28 +30,37 @@ plt.show()
 
 finish=False
 angle=0
-while finish==False:
+while finish == False:
         angle, finish=rotate_image(frame, angle)
-frame=rotate(frame, angle)
+if angle != 0:
+    frame=rotate(frame, angle)
 
 # Detect center of lightspot, show quadrants:
 
 centroid=threshold_centroid(frame)
-plot_im_w_quadrants(frame, centroid)
+plot_im_w_quadrants(frame, centroid, fig_title='1st frame with quadrants')
 
 # Demonstrate how shifted image looks like
 
 transform = AffineTransform(translation=(1, 0))
 shifted = warp(frame, transform, mode='constant', preserve_range=True)
-plot_im_w_quadrants(shifted, centroid)
+plot_im_w_quadrants(shifted, centroid, fig_title='1 px shift')
 
 # Shift images along x axis
 
 shifted_im = []
-x_shift = np.array([0.1*dx for dx in range(0, 11)])  # generate dx value for linear shift
+# specify parameters for calculations
+# generate dx value for linear shift
+x_shift = np.array([0.1*dx for dx in range(0, 11)])
+k_px_um = 1.36 # scale px to um
+normalization = False # don't scale signal over SUM
+shift_vs_sig = True # calculate shift from signal, not other way
 for dx in x_shift:
     transform = AffineTransform(translation=(dx, 0))  # shift along lateral axis
-    shifted_im.append(warp(frame, transform, mode='constant', preserve_range=True))
+    shifted_im.append(warp(frame,
+                           transform,
+                           mode='constant',
+                           preserve_range=True))
 
 # Calculate the intensities
 
@@ -59,12 +68,26 @@ Il=np.array([])
 Iz=np.array([])
 Isum=np.array([])
 for i in range(len(shifted_im)):
-    Iz, Il, Isum = calc_intensities(shifted_im[i], centroid, Iz, Il, Isum)
+    Iz, Il, Isum = calc_intensities(shifted_im[i],
+                                    centroid,
+                                    Iz,
+                                    Il,
+                                    Isum)
 
 # Show calculated intensity difference vs displacement and get linear fit coefficients of the calibration:
 
-plot_shift_curves(k_px_um=1.36, Il=Il, Iz=Iz, Isum=Isum, x_shift=x_shift, normalization=False, shift_vs_sig=True)
-k, b = calc_calib_line(x_shift=x_shift, k_px_um=1.36, Il=Il, normalization=False, shift_vs_sig=True)
+plot_shift_curves(k_px_um=k_px_um,
+                  Il=Il,
+                  Iz=Iz,
+                  Isum=Isum,
+                  x_shift=x_shift,
+                  normalization=normalization,
+                  shift_vs_sig=shift_vs_sig)
+k, b = calc_calib_line(x_shift=x_shift,
+                       k_px_um=k_px_um,
+                       Il=Il,
+                       normalization=normalization,
+                       shift_vs_sig=shift_vs_sig)
 
 
 
