@@ -91,12 +91,12 @@ def plot_shift_curves(k_px_um, Il, Iz, Isum, x_shift, normalization=False, shift
         if shift_vs_sig: # plot shift vs intensity
             plt.plot(Il, x_shift_nm, label='lateral', linestyle='-', marker='o')
             plt.plot(Iz, x_shift_nm, label='vertical', linestyle='-', marker='o')
-            plt.xlabel('Intensity difference normalized, a.u.')
+            plt.xlabel('Intensity difference, a.u.')
             plt.ylabel('Shift, nm')
         else: # plot intensity vs shift
             plt.plot(x_shift_nm, Il, label='lateral', linestyle='-', marker='o')
             plt.plot(x_shift_nm, Iz, label='vertical', linestyle='-', marker='o')
-            plt.ylabel('Intensity difference normalized, a.u.')
+            plt.ylabel('Intensity difference, a.u.')
             plt.xlabel('Shift, nm')
     plt.legend()
     plt.show()
