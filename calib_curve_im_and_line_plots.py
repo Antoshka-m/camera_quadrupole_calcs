@@ -64,12 +64,12 @@ def plot_shift_curves(k_px_um, Il, Iz, Isum, x_shift, normalization=False, shift
         if shift_vs_sig: # plot shift vs intensity
             plt.plot(Il, x_shift, label='lateral', linestyle='-', marker='o')
             plt.plot(Iz, x_shift, label='vertical', linestyle='-', marker='o')
-            plt.xlabel('Intensity difference normalized, a.u.')
+            plt.xlabel('Intensity difference, a.u.')
             plt.ylabel('Shift, px')
         else: # plot intensity vs shift
             plt.plot(x_shift, Il, label='lateral', linestyle='-', marker='o')
             plt.plot(x_shift, Iz, label='vertical', linestyle='-', marker='o')
-            plt.ylabel('Intensity difference normalized, a.u.')
+            plt.ylabel('Intensity difference, a.u.')
             plt.xlabel('Shift, px')
     plt.legend()
     plt.figure() # second figure has the same plots, but x_shift scaled to nm
