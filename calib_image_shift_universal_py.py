@@ -17,7 +17,7 @@ from  skimage.transform import rotate
 
 def main():
     # Let's import first frame of videofile, and show it
-    
+    print('Choose videofile for making calib curves')
     file = get_filenames()
     file = file[0] # get just single file instead of list
     print('Importing file ', file)
@@ -113,7 +113,7 @@ def main():
                       x_shift=x_shift,
                       normalization=True,
                       shift_vs_sig=shift_vs_sig)
-    k_x, b_x, k_y, b_y = calc_calib_line(x_shift=x_shift,
+    k_x_norm, b_x_norm, k_y_norm, b_y_norm = calc_calib_line(x_shift=x_shift,
                                          y_shift=x_shift,
                                          k_px_um=k_px_um,
                                          Il=Il,
@@ -121,7 +121,7 @@ def main():
                                          Isum=Isum,
                                          normalization=True,
                                          shift_vs_sig=shift_vs_sig)
-    return k_x, b_x, k_y, b_y
+    return k_x, b_x, k_y, b_y, k_x_norm, b_x_norm, k_y_norm, b_y_norm
 
 
 
